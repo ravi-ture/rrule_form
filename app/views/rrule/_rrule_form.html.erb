@@ -1,0 +1,143 @@
+
+<div class="modal" tabindex="-1" role="dialog" id='rrule_form_modal-<%= selector.gsub(/[^\w\s]/, '_') %>'>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title">Set Recurrence Rule</h3>
+      </div>
+      <div class="modal-body">
+        <form name="rrule[<%= selector.gsub(/[^\w\s]/, '_') %>]" id="rrule-<%= selector.gsub(/[^\w\s]/, '_') %>" class='rrule-form' action='javascript:void(0);'>
+           <p>Start Date: <input type="text" class="datepicker" id="start-date-rrule" /></p>
+           <input type="hidden" name="start-date-formatted" id="start-date-hidden" value="" />
+           <!-- <p> End Date: <input type="text" class="datepicker" id="start-date" /></p> -->
+           <p>Recurring Event?
+              <input type="radio" name="event-recurring" value="no" checked="checked" /> No
+              <input type="radio" name="event-recurring" value="yes" /> Yes
+           </p>
+           <div id="recurring-rules" style="display:none;">
+              <!-- FREQ -->
+              <p>
+                 Frequency
+                 <select name="freq">
+                    <option value="daily" class="days">Daily</option>
+                    <option value="weekly" class="weeks">Weekly</option>
+                    <option value="monthly" class="months">Monthly</option>
+                    <option value="yearly" class="years">Yearly</option>
+                 </select>
+              </p>
+              <p>Every <input type="text" name="interval" value="1" size="2" /> <span class="freq-selection">day(s)</span>
+              </p>
+              <!-- BYWEEKDAY -->
+              <div id="weekday-select" class="btn-toolbar weeks-choice" role="toolbar" style="display:none;">
+                 <b>Which day(s) of the week does this repeat on:</b>
+                 <div class="btn-group">
+                   <% %w{SUN MON TUE WED THU FRI SAT}.each do |wday| %>
+                     <button class="btn btn-default" id="<%= wday.first(2) %>"><%= wday.titleize %></button>
+                   <% end %>
+                 </div>
+              </div>
+              <!-- BYMONTH -->
+              <div id="bymonth-select" class="btn-toolbar years-choice" role="toolbar" style="display:none;">
+                 <span>Which month(s) of the year does this repeat on</span>
+                 <p><input type="radio" name="yearly-options" id="yearly-one-month" checked="checked" /> One Month Out of the Year</p>
+                 on
+                 <select name="yearly-bymonth" id="yearly-bymonth" class="yearly-one-month">
+                   <% I18n.t("date.month_names").compact.each_with_index do |month, index| %>
+                     <option value="<%= index + 1 %>"><%= month %></option>
+                   <% end %>
+                 </select>
+                 <select name="yearly-bymonthday" id="yearly-bymonthday" class="yearly-one-month">
+                    <% (1..31).each do |index| %>
+                      <option value="<%= index %>"><%= index %></option>
+                    <% end %>
+                 </select>
+                 <p><input type="radio" name="yearly-options" id="yearly-multiple-months" /> Multiple Months</p>
+                  <% I18n.t("date.abbr_month_names").compact.in_groups_of(6).each do |month_grp| %>
+                    <div style="display:block;float:none;" class="btn-group yearly-multiple-months">
+                      <% month_grp.each do |month| %>
+                        <button class="btn btn-default" style="width:16.66666666666667%" data-month-num="<%= I18n.t("date.abbr_month_names").compact.index(month) + 1%>" disabled="disabled"><%= month %></button>
+                      <% end %>
+                    </div>
+                  <% end %>
+                 <p><input type="radio" name="yearly-options" id="yearly-precise" /> Or be precise</p>
+                 on the
+                 <select name="yearly-bysetpos" class="yearly-precise" disabled="disabled">
+                    <option value="1" selected="selected">First</option>
+                    <option value="2">Second</option>
+                    <option value="3">Third</option>
+                    <option value="4">Fourth</option>
+                    <option value="-1">Last</option>
+                 </select>
+                 <select name="yearly-byday" class="yearly-precise" disabled="disabled">
+                    <% Date::DAYNAMES.each do |day| %>
+                      <option value="<%= day.first(2).upcase %>"><%= day %></option>
+                    <% end %>
+                    <option value="SU,MO,TU,WE,TH,FR,SA" selected="selected">Day</option>
+                    <option value="MO,TU,WE,TH,FR">Weekday</option>
+                    <option value="SU,SA">Weekend day</option>
+                 </select>
+                 in
+                 <select name="yearly-bymonth-with-bysetpos-byday"  id="yearly-bymonth-with-bysetpos-byday" class="yearly-precise" disabled="disabled">
+                   <% I18n.t("date.month_names").compact.each_with_index do |month, index| %>
+                     <option value="<%= index + 1 %>"><%= month %></option>
+                   <% end %>
+                 </select>
+              </div>
+              <!-- BYMONTHDAY -->
+              <div id="monthday-select" class="btn-toolbar months-choice" role="toolbar" style="display:none;">
+                 <input type="radio" name="monthday-pos-select" value="monthday-selected" id="monthday-selected" checked="checked" />
+                 <b>Which day(s) of the month does this repeat on</b>
+                 <% (1..31).to_a.in_groups_of(7).each do |date_grp| %>
+                    <div class="btn-group" style="display:block;float:none;">
+                      <% date_grp.compact.each do |date| %>
+                        <button class="btn btn-default" style="width:14.28571428571429%;" data-day-num="<%= date %>"><%= date %></button>
+                      <% end %>
+                    </div>
+                 <% end %>
+                 <!-- BYDAY -->
+                 <div>
+                    <input type="radio" name="monthday-pos-select" value="month-byday-pos-selected" id="month-byday-pos-selected" /> Or
+                    <select name="month-byday-pos" disabled="yes">
+                       <option value="1" selected="selected">First</option>
+                       <option value="2">Second</option>
+                       <option value="3">Third</option>
+                       <option value="4">Fourth</option>
+                       <option value="-1">Last</option>
+                    </select>
+                    <select name="month-byday-pos-name" disabled="yes">
+                      <% Date::DAYNAMES.each do |day| %>
+                        <option value="<%= day.first(2).upcase %>"><%= day %></option>
+                      <% end %>
+                       <option value="SU,MO,TU,WE,TH,FR,SA" selected="selected">Day</option>
+                       <option value="MO,TU,WE,TH,FR">Weekday</option>
+                       <option value="SU,SA">Weekend day</option>
+                    </select>
+                 </div>
+              </div>
+              <div id="until-rules" style="display:none;">
+                 <p>Until</p>
+                 <p> <label for="count-select"><input type="radio" name="end-select" value="count" id="count-select" checked="checked"/> How many times does this transaction occur?
+                    <input autocomplete="off" type="number" name="count" min="1" max="50" value="1" step="1"/> Time(s)</label>
+                 </p>
+                 <p><label for="until-select"><input type="radio" name="end-select" value="until" id="until-select" /> Specific Date (aka until)
+                   <input type="text" name="until" id="end-date-rrule" disabled="yes" />
+                    <input type="hidden" name="end-date-formatted" id="end-date-hidden" value="" /></label>
+                 </p>
+              </div>
+              <input type="submit" name="submit" value="submit" />
+           </div>
+          <div class="show-dates"></div>
+          <div class="readout"></div>
+          <!-- End Recurrence Form -->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  RruleForm.initialize('<%= selector %>', '<%= callback %>');
+</script>
