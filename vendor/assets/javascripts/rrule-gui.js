@@ -85,13 +85,13 @@ RruleForm = {
                     dateFormat: 'yy-mm-dd',
                     onSelect: function(value) {
 
-                        dateSelected = new Date(value + ' 00:00:00');
-                        dtstartString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
+                        var dateSelected = new Date(value + ' 00:00:00');
+                        var dtstartString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
                         $('#start-date-hidden').val(dtstartString + 'T040000z');
                         recurringRule.dtstart = dtstartString + 'T040000z';
 
                         // Set minimum selected date on end-datepicker
-                        minEndDate = dateSelected.getFullYear() + '-' + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + '-' + ('0' + dateSelected.getDate()).slice(-2);
+                        var minEndDate = dateSelected.getFullYear() + '-' + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + '-' + ('0' + dateSelected.getDate()).slice(-2);
                         $('#end-date-rrule').datepicker('option', 'minDate', minEndDate);
                         // Reset the selected enddate
                         $('#end-date-hidden').val(dtstartString + 'T040000z');
@@ -106,8 +106,8 @@ RruleForm = {
                     selectOtherMonths: true,
                     dateFormat: 'yy-mm-dd',
                     onSelect: function(value) {
-                        dateSelected = new Date(value + ' 00:00:00');
-                        untilString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
+                        var dateSelected = new Date(value + ' 00:00:00');
+                        var untilString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
                         $('#end-date-hidden').val(untilString + 'T040000z');
                         // Remove the count variable
                         recurringRule.count = '';
@@ -118,9 +118,9 @@ RruleForm = {
 
                 if (recur.UNTIL) {
                     // Setup end date picker
-                    endYear = recur.UNTIL.substring(0, 4);
-                    endMonth = recur.UNTIL.substring(4, 6);
-                    endDay = recur.UNTIL.substring(6, 8);
+                    var endYear = recur.UNTIL.substring(0, 4);
+                    var endMonth = recur.UNTIL.substring(4, 6);
+                    var endDay = recur.UNTIL.substring(6, 8);
 
                     $('#end-date-rrule').val(endYear + '-' + endMonth + '-' + endDay);
                     $('#end-date-hidden').val(endYear + endMonth + endDay + 'T040000z');
@@ -162,7 +162,7 @@ RruleForm = {
                         if (typeof recur.BYDAY !== 'undefined') {
 
                             // Split up the individual bymonthdays
-                            bydays = recur.BYDAY.split(',');
+                            var bydays = recur.BYDAY.split(',');
 
                             // Loop through the BYDAYs
                             for (v = 0; v < bydays.length; v++) {
@@ -194,7 +194,7 @@ RruleForm = {
                         if (typeof recur.BYMONTHDAY !== 'undefined') {
 
                             // Split up the individual bymonthdays
-                            bymonthdays = recur.BYMONTHDAY.split(',');
+                            var bymonthdays = recur.BYMONTHDAY.split(',');
 
                             // Loop through the BYMONTHDAYs
                             for (v = 0; v < bymonthdays.length; v++) {
@@ -329,7 +329,7 @@ RruleForm = {
     resetOptions: function() {
 
         // Format the date (http://stackoverflow.com/questions/3605214/javascript-add-leading-zeroes-to-date)
-        today = new Date();
+        var today = new Date();
         MyDateString = today.getFullYear() + ('0' + (today.getMonth() + 1)).slice(-2) + ('0' + today.getDate()).slice(-2);
 
         // Reset all the selected rules
@@ -405,11 +405,11 @@ RruleForm = {
             $('#start-date-rrule').datepicker({
                 showOtherMonths: true,
                 selectOtherMonths: true,
-                dateFormat: 'dd/mm/yy',
+                dateFormat: 'yy-mm-dd',
                 onSelect: function(value) {
 
-                    dateSelected = new Date(value.replace(/-/g, "/") + ' 00:00:00'); // REGEX used to please SAFARI browser!
-                    dtstartString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
+                    var dateSelected = new Date(value.replace(/-/g, "/") + ' 00:00:00'); // REGEX used to please SAFARI browser!
+                    var dtstartString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
                     $('#start-date-hidden').val(dtstartString + 'T040000z');
                     recurringRule.dtstart = dtstartString + 'T040000z';
 
@@ -428,11 +428,12 @@ RruleForm = {
             $('#end-date-rrule').datepicker({
                 showOtherMonths: true,
                 selectOtherMonths: true,
-                dateFormat: 'dd/mm/yy',
+                dateFormat: 'yy-mm-dd',
                 onSelect: function(value) {
                     //dateSelected = Date.parseExact(value, "yyyy-MM-dd");
-                    dateSelected = new Date(value.replace(/-/g, "/") + ' 00:00:00'); // REGEX used to please SAFARI browser!
-                    untilString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
+                    var dateSelected = new Date(value + ' 00:00:00'); // REGEX used to please SAFARI browser!
+                    console.log(dateSelected, value);
+                    var untilString = dateSelected.getFullYear() + ('0' + (dateSelected.getMonth() + 1)).slice(-2) + ('0' + dateSelected.getDate()).slice(-2);
                     $('#end-date-hidden').val(untilString + 'T040000z');
                     // Remove the count variable
                     recurringRule.count = '';
@@ -841,6 +842,7 @@ RruleForm = {
             if (callback === '') {
                 $(selector).val(RruleForm.rruleGenerate()).trigger('change');
             } else {
+                $(selector).val(RruleForm.rruleGenerate()).trigger('change');
                 eval(callback + '("'+RruleForm.rruleGenerate() +'")');
             }
             $('.modal.in').modal('hide');
