@@ -29,11 +29,11 @@ SOFTWARE.
 RruleForm = {
     readRule: function(rrule) {
 
-        rrule = typeof rrule !== 'undefined' ? rrule : '';
+        rruleObj = typeof rruleObj !== 'undefined' ? rruleObj : '';
 
-        if (rrule != '') {
+        if (rruleObj != '') {
             // Break down the rule by semi-colons first
-            var items = rrule.split(';');
+            var items = rruleObj.split(';');
             var recur = [];
             for (i = 0; i < items.length; i++) {
                 if (items[i] !== '') {
@@ -373,7 +373,7 @@ RruleForm = {
     },
     rruleGenerate: function() {
         // Produce RRULE state to feed to rrule.js
-        rrule = "";
+        rruleObj = "";
 
         // Check to be sure there is a count value or until date selected
         if (recurringRule.count == "" && recurringRule.until == "") {
@@ -383,15 +383,15 @@ RruleForm = {
         for (var key in recurringRule) {
             if (recurringRule.hasOwnProperty(key)) {
                 if (recurringRule[key] != '') {
-                    rrule += key + '=' + recurringRule[key] + ';';
+                    rruleObj += key + '=' + recurringRule[key] + ';';
                 }
             }
         }
         // Remove the last semicolon from the end of RRULE
-        rrule = rrule.replace(/;\s*$/, "");
+        rruleObj = rruleObj.replace(/;\s*$/, "");
 
         // Convert to Uppercase and return
-        return rrule.toUpperCase();
+        return rruleObj.toUpperCase();
     },
     initialize: function(selector, callback) {
         if (!$(selector).length) return;
@@ -532,7 +532,7 @@ RruleForm = {
             // Store Selected Days in the BYDAY rule
             $('#weekday-select button').each(function() {
 
-                // Active class is the selected day, store the ID of active days which contains the short day name for the rrule (ex. MO, TU, WE, etc)
+                // Active class is the selected day, store the ID of active days which contains the short day name for the rruleObj (ex. MO, TU, WE, etc)
                 if ($(this).hasClass('active')) {
                     byday.push($(this).attr('id'));
                 }
@@ -550,7 +550,7 @@ RruleForm = {
             // Store Selected Days in the BYDAY rule
             $('#monthday-select button').each(function() {
 
-                // Active class is the selected day, store the ID of active days which contains the short day name for the rrule (ex. MO, TU, WE, etc)
+                // Active class is the selected day, store the ID of active days which contains the short day name for the rruleObj (ex. MO, TU, WE, etc)
                 if ($(this).hasClass('active')) {
                     bymonthday.push($(this).attr('data-day-num'));
                 }
@@ -573,7 +573,7 @@ RruleForm = {
             // Store Selected Days in the BYDAY rule
             $('#bymonth-select button').each(function() {
 
-                // Active class is the selected day, store the ID of active days which contains the short day name for the rrule (ex. MO, TU, WE, etc)
+                // Active class is the selected day, store the ID of active days which contains the short day name for the rruleObj (ex. MO, TU, WE, etc)
                 if ($(this).hasClass('active')) {
                     bymonth.push($(this).attr('data-month-num'));
                 }
@@ -740,7 +740,7 @@ RruleForm = {
             // Store Selected Days in the BYDAY rule
             $('.yearly-multiple-months button').each(function() {
 
-                // Active class is the selected day, store the ID of active days which contains the short day name for the rrule (ex. MO, TU, WE, etc)
+                // Active class is the selected day, store the ID of active days which contains the short day name for the rruleObj (ex. MO, TU, WE, etc)
                 if ($(this).hasClass('active')) {
                     bymonth.push($(this).attr('data-month-num'));
                 }
@@ -839,9 +839,9 @@ RruleForm = {
         $('#rrule-' + selector.replace(/[^\w\s]/g, '_')).submit(function(e) {
             e.preventDefault();
             if (callback === '') {
-                $(selector).val(RruleForm.rruleGenerate());
+                $(selector).val(RruleForm.rruleGenerate()).trigger('change');
             } else {
-                callback(RruleForm.rruleGenerate())
+                eval(callback + '("'+RruleForm.rruleGenerate() +'")');
             }
             $('.modal.in').modal('hide');
         });
