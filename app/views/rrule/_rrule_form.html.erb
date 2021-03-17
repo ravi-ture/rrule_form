@@ -119,7 +119,12 @@
               </div>
               <div id="until-rules" style="display:none;">
                  <p>Until</p>
-                 <p> <label for="count-select"><input type="radio" name="end-select" value="count" id="count-select" checked="checked"/> How many times does this transaction occur?
+                 <p>
+                   <label for="forever-select">
+                     <input type="radio" name="end-select" value="never" id="count-select"/> Forever
+                   </label>
+                 </p>
+                 <p> <label for="count-select"><input type="radio" name="end-select" value="count" checked="checked" id="count-select"/> How many times does this transaction occur?
                     <input autocomplete="off" type="number" name="count" min="1" max="50" value="1" step="1"/> Time(s)</label>
                  </p>
                  <p><label for="until-select"><input type="radio" name="end-select" value="until" id="until-select" /> Specific Date (aka until)

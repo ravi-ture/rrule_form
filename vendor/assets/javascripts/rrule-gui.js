@@ -41,7 +41,6 @@ RruleForm = {
                 }
                 recur[temp[0]] = temp[1];
             }
-            console.log(recur);
 
             // See if the recurring rule has enough valid parts
             if (recur.FREQ && recur.DTSTART && (recur.COUNT || recur.UNTIL)) {
@@ -375,11 +374,6 @@ RruleForm = {
         // Produce RRULE state to feed to rrule.js
         rruleObj = "";
 
-        // Check to be sure there is a count value or until date selected
-        if (recurringRule.count == "" && recurringRule.until == "") {
-            // No end in sight, make it default to 1 occurence
-            recurringRule.count = "1";
-        }
         for (var key in recurringRule) {
             if (recurringRule.hasOwnProperty(key)) {
                 if (recurringRule[key] != '') {
@@ -821,6 +815,11 @@ RruleForm = {
                         recurringRule.count = '';
                         // Set until variable
                         recurringRule.until = $('#end-date-hidden').val();
+                    } else if ($(this).val() == 'never') {
+                        // Set count and until as null for never rule
+
+                        recurringRule.count = ''
+                        recurringRule.until = ''
                     }
                 } else {
                     //disable the inputs not selected.
