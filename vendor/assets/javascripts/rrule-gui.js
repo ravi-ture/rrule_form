@@ -390,7 +390,7 @@ RruleForm = {
     initialize: function(selector, callback) {
         if (!$(selector).length) return;
 
-        $('<a class="btn btn-small btn-default" data-toggle="modal" data-target="#rrule_form_modal-' + selector.replace(/[^\w\s]/g, '_') + '" href="#">change</a>').insertAfter($(selector)[0])
+        $('<a class="btn btn-small btn-default" data-toggle="modal" data-target="#rrule_form_modal-' + selector.replace(/[^\w\s]/g, '_') + '" href="#">Schedule</a>').insertAfter($(selector)[0])
         if ($(selector).val() != '') {
             RruleForm.readRule($(selector).val())
         } else {
